@@ -16,6 +16,7 @@ import Chart, {
 import "devextreme/dist/css/dx.common.css";
 import "devextreme/dist/css/dx.light.css";
 import {
+  Avatar,
   Button,
   Grid,
   IconButton,
@@ -163,33 +164,40 @@ const ChartComponent = ({ coin, currency }) => {
         alignItems="center"
       >
         <Grid item>
-          <Typography>
-            {marketData.market_data &&
-              CurrencyFormatter.format(
-                marketData.market_data.current_price[currency]
-              )}
-          </Typography>
-          <Typography
-            style={{
-              display: "flex",
-              color:
-                marketData.market_data &&
-                (marketData.market_data.price_change_percentage_24h >= 0
-                  ? green[400]
-                  : red[400]),
-            }}
-          >
-            {marketData.market_data &&
-              percentFormatter.format(
-                marketData.market_data.price_change_percentage_24h / 100
-              )}
-            {marketData.market_data &&
-              (marketData.market_data.price_change_percentage_24h >= 0 ? (
-                <ArrowDropUp />
-              ) : (
-                <ArrowDropDown />
-              ))}
-          </Typography>
+          <Grid container direction="row" spacing={2} alignItems="center">
+            <Grid item>
+              <Avatar src={marketData.image && marketData.image.small} />
+            </Grid>
+            <Grid item>
+              <Typography>
+                {marketData.market_data &&
+                  CurrencyFormatter.format(
+                    marketData.market_data.current_price[currency]
+                  )}
+              </Typography>
+              <Typography
+                style={{
+                  display: "flex",
+                  color:
+                    marketData.market_data &&
+                    (marketData.market_data.price_change_percentage_24h >= 0
+                      ? green[400]
+                      : red[400]),
+                }}
+              >
+                {marketData.market_data &&
+                  percentFormatter.format(
+                    marketData.market_data.price_change_percentage_24h / 100
+                  )}
+                {marketData.market_data &&
+                  (marketData.market_data.price_change_percentage_24h >= 0 ? (
+                    <ArrowDropUp />
+                  ) : (
+                    <ArrowDropDown />
+                  ))}
+              </Typography>
+            </Grid>
+          </Grid>
         </Grid>
         <Grid item>
           <IconButton
