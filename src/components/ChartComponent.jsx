@@ -7,7 +7,6 @@ import Chart, {
   Label,
   Format,
   ValueAxis,
-  Title,
   Tooltip,
   ZoomAndPan,
   Legend,
@@ -50,9 +49,14 @@ const useStyle = makeStyles((theme) => ({
       background: theme.palette.info.light,
     },
   },
+  daysBtn: {
+    paddingLeft: "0.1rem",
+    paddingRight: "0.1rem",
+    minWidth: "40px",
+  },
 }));
 
-const ChartComponent = ({ coin, currency }) => {
+const ChartComponent = ({ coin, currency, marketData }) => {
   const [dataSource, setDataSource] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [line, setLine] = useState(false);
@@ -64,7 +68,6 @@ const ChartComponent = ({ coin, currency }) => {
     false,
     false,
   ]);
-  const [marketData, setMarketData] = useState({});
 
   const classes = useStyle();
   const formats = [
@@ -75,10 +78,10 @@ const ChartComponent = ({ coin, currency }) => {
     "MMM dd",
     "MMM dd",
   ];
-  const CurrencyFormatter = new Intl.NumberFormat("en-US", {
+  const currencyFormatter = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: currency,
-    maximumFractionDigits: 2,
+    maximumFractionDigits: 6,
   });
   const percentFormatter = new Intl.NumberFormat(undefined, {
     maximumFractionDigits: 2,
@@ -90,24 +93,12 @@ const ChartComponent = ({ coin, currency }) => {
     const days = [1, 7, 30, 180, 365, "max"];
 
     const fetchData = async () => {
-      const [data, market] = await Promise.all([
-        coinGecko.get(`/coins/${coin}/ohlc`, {
-          params: {
-            vs_currency: currency,
-            days: days[daysSelected.indexOf(true)],
-          },
-        }),
-        coinGecko.get(`/coins/${coin}`, {
-          params: {
-            localization: false,
-            tickers: false,
-            market_data: true,
-            community_data: false,
-            developer_data: false,
-            sparkline: false,
-          },
-        }),
-      ]);
+      const data = await coinGecko.get(`/coins/${coin}/ohlc`, {
+        params: {
+          vs_currency: currency,
+          days: days[daysSelected.indexOf(true)],
+        },
+      });
 
       const mappedData = data.data.map((value) => {
         return {
@@ -118,7 +109,6 @@ const ChartComponent = ({ coin, currency }) => {
           c: value[4],
         };
       });
-      setMarketData(market.data);
       setDataSource(mappedData);
       setIsLoading(false);
     };
@@ -133,11 +123,11 @@ const ChartComponent = ({ coin, currency }) => {
         hourCycle: "h23",
       })}</b><br/><br/>` +
       (arg.openValue
-        ? `<b>Open:</b> ${CurrencyFormatter.format(arg.openValue)}<br/>
-<b>Close:</b> ${CurrencyFormatter.format(arg.closeValue)}<br/>
-<b>High:</b> ${CurrencyFormatter.format(arg.highValue)}<br/>
-<b>Low:</b> ${CurrencyFormatter.format(arg.lowValue)}</div>`
-        : `<b>Price:</b> ${CurrencyFormatter.format(arg.value)}</div>`);
+        ? `<b>Open:</b> ${currencyFormatter.format(arg.openValue)}<br/>
+<b>Close:</b> ${currencyFormatter.format(arg.closeValue)}<br/>
+<b>High:</b> ${currencyFormatter.format(arg.highValue)}<br/>
+<b>Low:</b> ${currencyFormatter.format(arg.lowValue)}</div>`
+        : `<b>Price:</b> ${currencyFormatter.format(arg.value)}</div>`);
     return {
       html: text,
     };
@@ -171,7 +161,7 @@ const ChartComponent = ({ coin, currency }) => {
             <Grid item>
               <Typography>
                 {marketData.market_data &&
-                  CurrencyFormatter.format(
+                  currencyFormatter.format(
                     marketData.market_data.current_price[currency]
                   )}
               </Typography>
@@ -186,15 +176,15 @@ const ChartComponent = ({ coin, currency }) => {
                 }}
               >
                 {marketData.market_data &&
-                  percentFormatter.format(
-                    marketData.market_data.price_change_percentage_24h / 100
-                  )}
-                {marketData.market_data &&
                   (marketData.market_data.price_change_percentage_24h >= 0 ? (
                     <ArrowDropUp />
                   ) : (
                     <ArrowDropDown />
                   ))}
+                {marketData.market_data &&
+                  percentFormatter.format(
+                    marketData.market_data.price_change_percentage_24h / 100
+                  )}
               </Typography>
             </Grid>
           </Grid>
@@ -239,7 +229,6 @@ const ChartComponent = ({ coin, currency }) => {
           <Label format={formats[daysSelected.indexOf(true)]} />
         </ArgumentAxis>
         <ValueAxis position="right">
-          <Title text={currency.toUpperCase()} />
           <Label>
             <Format
               precision={
@@ -260,12 +249,14 @@ const ChartComponent = ({ coin, currency }) => {
         <ZoomAndPan argumentAxis="both" />
       </Chart>
       <br />
-      <Grid container spacing={2}>
+      <Grid container spacing={1}>
         {["1D", "7D", "1M", "6M", "1Y", "All"].map((value, index) => {
           return (
             <Grid item key={index}>
               <Button
-                className={daysSelected[index] ? classes.daysSelected : null}
+                className={`${classes.daysBtn}${
+                  daysSelected[index] ? " " + classes.daysSelected : ""
+                }`}
                 variant="outlined"
                 key={index}
                 onClick={changeDays.bind(this, index)}
