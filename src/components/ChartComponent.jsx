@@ -148,7 +148,7 @@ const ChartComponent = ({ coin, currency }) => {
 
   const changeDays = (index) => {
     const res = daysSelected.map((value, i) => {
-      return i === index ? true : false;
+      return i === index;
     });
     setDaysSelected(res);
   };
