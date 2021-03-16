@@ -15,70 +15,58 @@ const MarketDetails = ({ marketData, currency }) => {
   });
   const coinFormatter = new Intl.NumberFormat();
 
-  const content = [
-    [
-      {
-        name: "Market Cap",
-        value:
-          marketData.market_data &&
-          currencyFormatter.format(marketData.market_data.market_cap[currency]),
-        percent:
-          marketData.market_data &&
-          percentFormatter.format(
+  const content =
+    (marketData.market_data && [
+      [
+        {
+          name: "Market Cap",
+          value: currencyFormatter.format(
+            marketData.market_data.market_cap[currency]
+          ),
+          percent: percentFormatter.format(
             marketData.market_data.market_cap_change_percentage_24h / 100
           ),
-      },
-      {
-        name: "All Time High",
-        value:
-          marketData.market_data &&
-          currencyFormatter.format(marketData.market_data.ath[currency]),
-        percent:
-          marketData.market_data &&
-          percentFormatter.format(
+        },
+        {
+          name: "All Time High",
+          value: currencyFormatter.format(marketData.market_data.ath[currency]),
+          percent: percentFormatter.format(
             marketData.market_data.ath_change_percentage[currency] / 100
           ),
-      },
-      {
-        name: "All Time Low",
-        value:
-          marketData.market_data &&
-          currencyFormatter.format(marketData.market_data.atl[currency]),
-        percent:
-          marketData.market_data &&
-          percentFormatter.format(
+        },
+        {
+          name: "All Time Low",
+          value: currencyFormatter.format(marketData.market_data.atl[currency]),
+          percent: percentFormatter.format(
             marketData.market_data.atl_change_percentage[currency] / 100
           ),
-      },
-    ],
-    [
-      {
-        name: "Volume",
-        value: currencyFormatter.format(
-          marketData.market_data &&
+        },
+      ],
+      [
+        {
+          name: "Volume",
+          value: currencyFormatter.format(
             marketData.market_data.total_volume[currency]
-        ),
-      },
-      {
-        name: "Circulating Supply",
-        value:
-          marketData.market_data &&
-          `${coinFormatter.format(
+          ),
+        },
+        {
+          name: "Circulating Supply",
+          value: `${coinFormatter.format(
             marketData.market_data.circulating_supply
           )} ${marketData.symbol.toUpperCase()}`,
-      },
-      {
-        name: "Fully Diluted Valuation",
-        value:
-          (marketData.market_data &&
-            marketData.market_data.fully_diluted_valuation[currency] &&
-            currencyFormatter.format(
-              marketData.market_data.fully_diluted_valuation[currency]
-            )) ||
-          "--",
-      },
-    ],
-  ];
+        },
+        {
+          name: "Fully Diluted Valuation",
+          value:
+            (marketData.market_data.fully_diluted_valuation[currency] &&
+              currencyFormatter.format(
+                marketData.market_data.fully_diluted_valuation[currency]
+              )) ||
+            "--",
+        },
+      ],
+    ]) ||
+    [];
 
   return (
     <React.Fragment>
