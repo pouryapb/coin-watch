@@ -156,11 +156,11 @@ const ChartComponent = ({ coin, currency, marketData }) => {
         <Grid item>
           <Grid container direction="row" spacing={2} alignItems="center">
             <Grid item>
-              <Avatar src={marketData.image && marketData.image.small} />
+              <Avatar src={marketData && marketData.image.small} />
             </Grid>
             <Grid item>
               <Typography>
-                {marketData.market_data &&
+                {marketData &&
                   currencyFormatter.format(
                     marketData.market_data.current_price[currency]
                   )}
@@ -169,19 +169,19 @@ const ChartComponent = ({ coin, currency, marketData }) => {
                 style={{
                   display: "flex",
                   color:
-                    marketData.market_data &&
+                    marketData &&
                     (marketData.market_data.price_change_percentage_24h >= 0
                       ? green[400]
                       : red[400]),
                 }}
               >
-                {marketData.market_data &&
+                {marketData &&
                   (marketData.market_data.price_change_percentage_24h >= 0 ? (
                     <ArrowDropUp />
                   ) : (
                     <ArrowDropDown />
                   ))}
-                {marketData.market_data &&
+                {marketData &&
                   percentFormatter.format(
                     marketData.market_data.price_change_percentage_24h / 100
                   )}
@@ -207,7 +207,7 @@ const ChartComponent = ({ coin, currency, marketData }) => {
       <Chart
         id="chart"
         theme="generic.light"
-        title={marketData.name && marketData.name + " Price"}
+        title={marketData && marketData.name + " Price"}
         dataSource={dataSource}
       >
         <LoadingIndicator show={isLoading} />
@@ -216,7 +216,7 @@ const ChartComponent = ({ coin, currency, marketData }) => {
           type={line ? "" : "candlestick"}
         />
         <Series
-          name={marketData.name}
+          name={marketData && marketData.name}
           openValueField="o"
           highValueField="h"
           lowValueField="l"
@@ -232,7 +232,7 @@ const ChartComponent = ({ coin, currency, marketData }) => {
           <Label>
             <Format
               precision={
-                marketData.market_data &&
+                marketData &&
                 (marketData.market_data.current_price[currency] > 100 ? 0 : 2)
               }
               type="currency"

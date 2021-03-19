@@ -8,12 +8,14 @@ import CoinList from "./components/CoinList";
 import { ConnectionContext } from "./context/ConnectionContext";
 
 function App() {
-  const [marketData, setMarketData] = useState({});
+  const [marketData, setMarketData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const { coinId } = useContext(ConnectionContext);
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true);
       const market = await coinGecko.get(`/coins/${coinId}`, {
         params: {
           localization: false,
@@ -26,6 +28,7 @@ function App() {
       });
 
       setMarketData(market.data);
+      setIsLoading(false);
     };
 
     fetchData();
@@ -48,7 +51,11 @@ function App() {
         <Grid item xs={12} md={3}>
           <Card>
             <CardContent>
-              <MarketDetails marketData={marketData} currency="usd" />
+              <MarketDetails
+                marketData={marketData}
+                currency="usd"
+                isLoading={isLoading}
+              />
             </CardContent>
           </Card>
         </Grid>

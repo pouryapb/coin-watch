@@ -117,6 +117,7 @@ const WatchList = ({ currency }) => {
     });
     setList(newList);
     setCoinId(newList[index].id);
+    window.scroll({ top: 0, left: 0, behavior: "smooth" });
   };
 
   return (

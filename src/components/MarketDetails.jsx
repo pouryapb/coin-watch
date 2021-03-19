@@ -3,7 +3,7 @@ import { ArrowDropUp, ArrowDropDown } from "@material-ui/icons";
 import { red, green } from "@material-ui/core/colors";
 import React from "react";
 
-const MarketDetails = ({ marketData, currency }) => {
+const MarketDetails = ({ marketData, currency, isLoading }) => {
   const currencyFormatter = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: currency,
@@ -16,59 +16,85 @@ const MarketDetails = ({ marketData, currency }) => {
   const coinFormatter = new Intl.NumberFormat();
 
   const content =
-    (marketData.market_data && [
+    [
       [
         {
           name: "Market Cap",
-          value: currencyFormatter.format(
-            marketData.market_data.market_cap[currency]
-          ),
-          percent: percentFormatter.format(
-            marketData.market_data.market_cap_change_percentage_24h / 100
-          ),
+          value:
+            (!isLoading &&
+              currencyFormatter.format(
+                marketData.market_data.market_cap[currency]
+              )) ||
+            "--",
+          percent:
+            (!isLoading &&
+              percentFormatter.format(
+                marketData.market_data.market_cap_change_percentage_24h / 100
+              )) ||
+            "--",
         },
         {
           name: "All Time High",
-          value: currencyFormatter.format(marketData.market_data.ath[currency]),
-          percent: percentFormatter.format(
-            marketData.market_data.ath_change_percentage[currency] / 100
-          ),
+          value:
+            (!isLoading &&
+              currencyFormatter.format(marketData.market_data.ath[currency])) ||
+            "--",
+          percent:
+            (!isLoading &&
+              percentFormatter.format(
+                marketData.market_data.ath_change_percentage[currency] / 100
+              )) ||
+            "--",
         },
         {
           name: "All Time Low",
-          value: currencyFormatter.format(marketData.market_data.atl[currency]),
-          percent: percentFormatter.format(
-            marketData.market_data.atl_change_percentage[currency] / 100
-          ),
+          value:
+            (!isLoading &&
+              currencyFormatter.format(marketData.market_data.atl[currency])) ||
+            "--",
+          percent:
+            (!isLoading &&
+              percentFormatter.format(
+                marketData.market_data.atl_change_percentage[currency] / 100
+              )) ||
+            "--",
         },
         {
           name: "Volume",
-          value: currencyFormatter.format(
-            marketData.market_data.total_volume[currency]
-          ),
+          value:
+            (!isLoading &&
+              currencyFormatter.format(
+                marketData.market_data.total_volume[currency]
+              )) ||
+            "--",
         },
         {
           name: "Circulating Supply",
-          value: `${coinFormatter.format(
-            marketData.market_data.circulating_supply
-          )} ${marketData.symbol.toUpperCase()}`,
+          value: `${
+            !isLoading
+              ? coinFormatter.format(
+                  marketData.market_data.circulating_supply
+                ) + " "
+              : "-"
+          }${!isLoading ? marketData.symbol.toUpperCase() : "-"}`,
         },
         {
           name: "Fully Diluted Valuation",
           value:
-            (marketData.market_data.fully_diluted_valuation[currency] &&
+            (!isLoading &&
+              marketData.market_data.fully_diluted_valuation[currency] &&
+              !isLoading &&
               currencyFormatter.format(
                 marketData.market_data.fully_diluted_valuation[currency]
               )) ||
             "--",
         },
       ],
-    ]) ||
-    [];
+    ] || [];
 
   return (
     <React.Fragment>
-      {!marketData.market_data && <LinearProgress />}
+      {isLoading && <LinearProgress />}
       {content.map((row, index) => {
         return (
           <Grid
@@ -78,36 +104,38 @@ const MarketDetails = ({ marketData, currency }) => {
             key={index}
             spacing={3}
           >
-            {marketData.market_data &&
-              row.map((item, index) => {
-                return (
-                  <Grid item key={index}>
-                    <Typography variant="subtitle2" display="block">
-                      {item.name}
-                    </Typography>
-                    <Typography variant="h6" display="block">
-                      {item.value}
-                    </Typography>
-                    {item.percent && (
-                      <Typography
-                        variant="caption"
-                        style={{
-                          display: "flex",
-                          color: item.percent >= 0 ? green[400] : red[400],
-                        }}
-                      >
-                        {item.percent >= 0 ? (
+            {row.map((item, index) => {
+              return (
+                <Grid item key={index}>
+                  <Typography variant="subtitle2" display="block">
+                    {item.name}
+                  </Typography>
+                  <Typography variant="h6" display="block">
+                    {item.value}
+                  </Typography>
+                  {item.percent && (
+                    <Typography
+                      variant="caption"
+                      style={{
+                        display: "flex",
+                        color:
+                          !isLoading &&
+                          (item.percent >= 0 ? green[400] : red[400]),
+                      }}
+                    >
+                      {!isLoading &&
+                        (item.percent >= 0 ? (
                           <ArrowDropUp />
                         ) : (
                           <ArrowDropDown />
-                        )}
-                        {item.percent}
-                      </Typography>
-                    )}
-                    {index < row.length - 1 && <Divider variant="fullWidth" />}
-                  </Grid>
-                );
-              })}
+                        ))}
+                      {item.percent}
+                    </Typography>
+                  )}
+                  {index < row.length - 1 && <Divider variant="fullWidth" />}
+                </Grid>
+              );
+            })}
           </Grid>
         );
       })}
