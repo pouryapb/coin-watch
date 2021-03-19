@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.js": "/coin-watch/static/js/main.f2a90232.chunk.js",
+    "main.js.map": "/coin-watch/static/js/main.f2a90232.chunk.js.map",
+    "runtime-main.js": "/coin-watch/static/js/runtime-main.350f8811.js",
+    "runtime-main.js.map": "/coin-watch/static/js/runtime-main.350f8811.js.map",
+    "static/css/2.96950924.chunk.css": "/coin-watch/static/css/2.96950924.chunk.css",
+    "static/js/2.e5fae42b.chunk.js": "/coin-watch/static/js/2.e5fae42b.chunk.js",
+    "static/js/2.e5fae42b.chunk.js.map": "/coin-watch/static/js/2.e5fae42b.chunk.js.map",
+    "index.html": "/coin-watch/index.html",
+    "static/css/2.96950924.chunk.css.map": "/coin-watch/static/css/2.96950924.chunk.css.map",
+    "static/js/2.e5fae42b.chunk.js.LICENSE.txt": "/coin-watch/static/js/2.e5fae42b.chunk.js.LICENSE.txt",
+    "static/media/dx.light.css": "/coin-watch/static/media/dxicons.d8b3a23c.ttf"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.350f8811.js",
+    "static/css/2.96950924.chunk.css",
+    "static/js/2.e5fae42b.chunk.js",
+    "static/js/main.f2a90232.chunk.js"
+  ]
+}
