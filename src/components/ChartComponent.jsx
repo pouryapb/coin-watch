@@ -228,7 +228,7 @@ const ChartComponent = ({ coin, currency, marketData }) => {
         <ArgumentAxis>
           <Label format={formats[daysSelected.indexOf(true)]} />
         </ArgumentAxis>
-        <ValueAxis position="right">
+        <ValueAxis position="left">
           <Label>
             <Format
               precision={

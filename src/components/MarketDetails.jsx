@@ -1,4 +1,4 @@
-import { Grid, LinearProgress, Typography } from "@material-ui/core";
+import { Divider, Grid, LinearProgress, Typography } from "@material-ui/core";
 import { ArrowDropUp, ArrowDropDown } from "@material-ui/icons";
 import { red, green } from "@material-ui/core/colors";
 import React from "react";
@@ -41,8 +41,6 @@ const MarketDetails = ({ marketData, currency }) => {
             marketData.market_data.atl_change_percentage[currency] / 100
           ),
         },
-      ],
-      [
         {
           name: "Volume",
           value: currencyFormatter.format(
@@ -75,7 +73,7 @@ const MarketDetails = ({ marketData, currency }) => {
         return (
           <Grid
             container
-            direction="row"
+            direction="column"
             justify="space-between"
             key={index}
             spacing={3}
@@ -83,7 +81,7 @@ const MarketDetails = ({ marketData, currency }) => {
             {marketData.market_data &&
               row.map((item, index) => {
                 return (
-                  <Grid item xs={12} sm={4} key={index}>
+                  <Grid item key={index}>
                     <Typography variant="subtitle2" display="block">
                       {item.name}
                     </Typography>
@@ -106,6 +104,7 @@ const MarketDetails = ({ marketData, currency }) => {
                         {item.percent}
                       </Typography>
                     )}
+                    {index < row.length - 1 && <Divider variant="fullWidth" />}
                   </Grid>
                 );
               })}
