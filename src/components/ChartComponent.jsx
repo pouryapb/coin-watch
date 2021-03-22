@@ -63,11 +63,11 @@ const ChartComponent = ({ coin, currency, marketData }) => {
   const classes = useStyle();
   const formats = [
     "HH:mm",
-    "MMM dd\nHH:mm",
-    "MMM dd\nHH:mm",
-    "MMM dd",
-    "MMM dd",
-    "MMM dd",
+    "HH:mm\nMMM dd",
+    "HH:mm\nMMM dd",
+    "MMM dd, yyyy",
+    "MMM dd, yyyy",
+    "MMM dd, yyyy",
   ];
   const currencyFormatter = new Intl.NumberFormat("en-US", {
     style: "currency",
