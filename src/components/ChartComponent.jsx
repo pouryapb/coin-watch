@@ -22,6 +22,7 @@ import {
   LinearProgress,
   makeStyles,
   Typography,
+  useTheme,
 } from "@material-ui/core";
 import { ShowChart, ArrowDropDown, ArrowDropUp } from "@material-ui/icons";
 import { red, green } from "@material-ui/core/colors";
@@ -29,19 +30,8 @@ import { red, green } from "@material-ui/core/colors";
 import coinGecko from "../API/coinGecko";
 
 const useStyle = makeStyles((theme) => ({
-  chartChangeBtnUnchecked: {
-    background: theme.palette.grey[300],
-    borderRadius: "10%",
-    "&:hover": {
-      background: theme.palette.grey[400],
-    },
-  },
   chartChangeBtnChecked: {
-    background: theme.palette.info.light,
-    borderRadius: "10%",
-    "&:hover": {
-      background: theme.palette.info.main,
-    },
+    color: theme.palette.info.light,
   },
   daysSelected: {
     background: theme.palette.info.light,
@@ -69,6 +59,7 @@ const ChartComponent = ({ coin, currency, marketData }) => {
     false,
   ]);
 
+  const theme = useTheme();
   const classes = useStyle();
   const formats = [
     "HH:mm",
@@ -193,11 +184,7 @@ const ChartComponent = ({ coin, currency, marketData }) => {
           <IconButton
             size="small"
             disableRipple
-            className={
-              line
-                ? classes.chartChangeBtnChecked
-                : classes.chartChangeBtnUnchecked
-            }
+            className={line ? classes.chartChangeBtnChecked : ""}
             onClick={btnToggle}
           >
             <ShowChart />
@@ -206,7 +193,7 @@ const ChartComponent = ({ coin, currency, marketData }) => {
       </Grid>
       <Chart
         id="chart"
-        theme="generic.light"
+        theme={`generic.${theme.palette.type}`}
         title={marketData && marketData.name + " Price"}
         dataSource={dataSource}
       >
