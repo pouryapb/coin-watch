@@ -73,7 +73,7 @@ function App() {
           <Toolbar variant="dense">
             <Typography style={{ flexGrow: 1 }}>Coin Watch</Typography>
             <IconButton onClick={changeTheme}>
-              {themeColor === "dark" ? <Brightness4 /> : <BrightnessHigh />}
+              {themeColor !== "dark" ? <Brightness4 /> : <BrightnessHigh />}
             </IconButton>
           </Toolbar>
         </AppBar>
