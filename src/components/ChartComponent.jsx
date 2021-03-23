@@ -13,7 +13,7 @@ import Chart, {
   LoadingIndicator,
 } from "devextreme-react/chart";
 import "devextreme/dist/css/dx.common.css";
-import "devextreme/dist/css/dx.light.css";
+import "devextreme/dist/css/dx.light.compact.css";
 import {
   Avatar,
   Button,
