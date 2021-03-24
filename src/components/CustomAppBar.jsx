@@ -1,21 +1,24 @@
 import {
   AppBar,
   Avatar,
-  Container,
   fade,
+  FormControl,
   IconButton,
   InputBase,
   List,
   ListItem,
   makeStyles,
+  MenuItem,
   Paper,
+  Select,
   Toolbar,
   Typography,
   useTheme,
 } from "@material-ui/core";
 import { Brightness4, BrightnessHigh, Search } from "@material-ui/icons";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router";
+import coinGecko from "../API/coinGecko";
 import { CoinListContext } from "../context/CoinListContext";
 
 const useStyles = makeStyles((theme) => ({
@@ -26,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       backgroundColor: fade(theme.palette.common.white, 0.25),
     },
-    marginRight: theme.spacing(2),
+    marginRight: theme.spacing(1),
     width: "100%",
     [theme.breakpoints.up("xs")]: {
       marginLeft: theme.spacing(1),
@@ -34,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   searchIcon: {
-    padding: theme.spacing(0, 2),
+    padding: theme.spacing(0, 1),
     height: "100%",
     position: "absolute",
     pointerEvents: "none",
@@ -48,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
     // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+    paddingLeft: `calc(1em + ${theme.spacing(3)}px)`,
     transition: theme.transitions.create("width"),
     width: "100%",
     [theme.breakpoints.up("xs")]: {
@@ -62,14 +65,24 @@ const useStyles = makeStyles((theme) => ({
 
 const CustomAppBar = ({ themeType, setThemeType }) => {
   const classes = useStyles();
-  const { search } = useContext(CoinListContext);
+  const history = useHistory();
+  const theme = useTheme();
+  const { search, currency, setCurrency } = useContext(CoinListContext);
 
   const [searchResults, setSearchResults] = useState([]);
   const [openResult, setOpenResult] = useState(false);
   const [searchBoxValue, setSearchBoxValue] = useState("");
+  const [currencyList, setCurrencyList] = useState([currency]);
 
-  const history = useHistory();
-  const theme = useTheme();
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await coinGecko.get("/simple/supported_vs_currencies");
+
+      setCurrencyList(data.data);
+    };
+
+    fetchData();
+  }, []);
 
   const changeTheme = (event) => {
     const type = themeType === "dark" ? "light" : "dark";
@@ -93,77 +106,103 @@ const CustomAppBar = ({ themeType, setThemeType }) => {
     setOpenResult(true);
   };
 
+  const handleCurrencyChange = (event) => {
+    setCurrency(event.target.value.toLowerCase());
+  };
+
   return (
     <AppBar
       color="default"
       position="sticky"
       style={{ marginBottom: theme.spacing(1) }}
     >
-      <Container>
-        <Toolbar>
-          <Typography
-            style={{ flexGrow: 1, cursor: "pointer" }}
-            onClick={() => history.push("/coin-watch")}
+      <Toolbar>
+        <Typography
+          style={{
+            flexGrow: 1,
+            cursor: "pointer",
+          }}
+          onClick={() => history.push("/coin-watch")}
+        >
+          Coin Watch
+        </Typography>
+        <div className={classes.search}>
+          <div className={classes.searchIcon}>
+            <Search />
+          </div>
+          <InputBase
+            placeholder="Search…"
+            classes={{
+              root: classes.inputRoot,
+              input: classes.inputInput,
+            }}
+            inputProps={{ "aria-label": "search" }}
+            onChange={searchHandler}
+            value={searchBoxValue}
+          />
+          <pre
+            style={{
+              position: "absolute",
+              width: "100%",
+              display: openResult ? "block" : "none",
+            }}
           >
-            Coin Watch
-          </Typography>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <Search />
-            </div>
-            <InputBase
-              placeholder="Search…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ "aria-label": "search" }}
-              onChange={searchHandler}
-              value={searchBoxValue}
-            />
-            <pre
-              style={{
-                position: "absolute",
-                width: "100%",
-                display: openResult ? "block" : "none",
-              }}
-            >
-              <Paper elevation={3}>
-                <List>
-                  {searchResults.map((value, index) => {
-                    return (
-                      <ListItem
-                        key={index}
+            <Paper elevation={3}>
+              <List>
+                {searchResults.map((value, index) => {
+                  return (
+                    <ListItem
+                      key={index}
+                      style={{
+                        cursor: "pointer",
+                      }}
+                      onClick={() => {
+                        history.push(`/coin-watch/${value.id}`);
+                        setOpenResult(false);
+                        setSearchBoxValue("");
+                      }}
+                    >
+                      <Avatar
+                        //src={value.image}
                         style={{
-                          cursor: "pointer",
-                        }}
-                        onClick={() => {
-                          history.push(`/coin-watch/${value.id}`);
-                          setOpenResult(false);
-                          setSearchBoxValue("");
+                          marginRight: theme.spacing(1),
+                          fontSize: theme.spacing(2),
                         }}
                       >
-                        <Avatar
-                          src={value.image}
-                          style={{
-                            marginRight: theme.spacing(1),
-                          }}
-                        />
-                        <Typography variant="caption" noWrap>
-                          {value.name}
-                        </Typography>
-                      </ListItem>
-                    );
-                  })}
-                </List>
-              </Paper>
-            </pre>
-          </div>
-          <IconButton onClick={changeTheme}>
-            {themeType !== "dark" ? <Brightness4 /> : <BrightnessHigh />}
-          </IconButton>
-        </Toolbar>
-      </Container>
+                        {value.symbol}
+                      </Avatar>
+                      <Typography variant="caption" noWrap>
+                        {value.name}
+                      </Typography>
+                    </ListItem>
+                  );
+                })}
+              </List>
+            </Paper>
+          </pre>
+        </div>
+        <FormControl>
+          <Select
+            value={currency.toUpperCase()}
+            onChange={handleCurrencyChange}
+            className={classes.selectEmpty}
+            inputProps={{ "aria-label": "Without label" }}
+          >
+            {currencyList.map((value, index) => {
+              if (value.length > 3) return null;
+              const capsValue = value.toUpperCase();
+              return (
+                <MenuItem key={index} value={capsValue}>
+                  {capsValue}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        </FormControl>
+        <IconButton onClick={changeTheme}>
+          {themeType !== "dark" ? <Brightness4 /> : <BrightnessHigh />}
+        </IconButton>
+      </Toolbar>
     </AppBar>
   );
 };

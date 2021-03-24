@@ -26,11 +26,15 @@ const createData = (
 };
 
 const CoinListProvider = ({ children }) => {
-  const [currency, setCurrency] = useState("usd");
+  const [currency, setCurrency] = useState(
+    window.localStorage.getItem("currency") || "usd"
+  );
   const [isLoading, setIsLoading] = useState(true);
   const [list, setList] = useState([]);
   const [page, setPage] = useState(0);
   const [perPage, setPerPage] = useState(10);
+  const [activeCryptos, setActiveCryptos] = useState(0);
+  const [allCoins, setAllCoins] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,31 +50,29 @@ const CoinListProvider = ({ children }) => {
         style: "percent",
       });
 
-      const allCoin = await coinGecko.get("/global");
-      const pages = Math.ceil(allCoin.data.data.active_cryptocurrencies / 250);
-
-      const reqs = [];
-
-      for (let i = 1; i <= pages; i++) {
-        reqs.push(
-          coinGecko.get("/coins/markets", {
-            params: {
-              vs_currency: currency,
-              order: "market_cap_desc",
-              per_page: 250,
-              page: i,
-              price_change_percentage: "24h",
-            },
-          })
-        );
+      if (activeCryptos === 0) {
+        const allCoin = await coinGecko.get("/coins/list", {
+          params: {
+            include_platform: false,
+          },
+        });
+        const actives = allCoin.data.length;
+        setActiveCryptos(actives);
+        setAllCoins(allCoin.data);
       }
 
-      const res = await Promise.all(reqs);
+      const currentPage = await coinGecko.get("/coins/markets", {
+        params: {
+          vs_currency: currency,
+          order: "market_cap_desc",
+          per_page: perPage,
+          page: page + 1,
+          price_change_percentage: "24h",
+        },
+      });
 
-      const markets = res.reduce(
-        (prev, current) => prev.concat(current.data),
-        []
-      );
+      const markets = currentPage.data;
+
       setList(
         markets.map((item) => {
           return createData(
@@ -90,15 +92,20 @@ const CoinListProvider = ({ children }) => {
     };
 
     fetchData();
-  }, [currency]);
+  }, [currency, page, perPage, activeCryptos]);
 
   const search = (prefix) => {
-    return list.filter((value) => {
+    return allCoins.filter((value) => {
       return (
         value.name.toLowerCase().startsWith(prefix.toLowerCase()) ||
         value.id.toLowerCase().startsWith(prefix.toLowerCase())
       );
     });
+  };
+
+  const currencySetter = (value) => {
+    window.localStorage.setItem("currency", value);
+    setCurrency(value);
   };
 
   return (
@@ -109,7 +116,8 @@ const CoinListProvider = ({ children }) => {
         list,
         page,
         perPage,
-        setCurrency,
+        activeCryptos,
+        setCurrency: currencySetter,
         setPage,
         setPerPage,
         search,

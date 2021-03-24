@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Grid, Card, CardContent, Container } from "@material-ui/core";
 
 import coinGecko from "../API/coinGecko";
 import MarketDetails from "../components/MarketDetails";
 import ChartComponent from "../components/ChartComponent";
+import { CoinListContext } from "../context/CoinListContext";
 
 const Details = ({ match }) => {
   const [marketData, setMarketData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const { currency } = useContext(CoinListContext);
 
   const coinId = match.params.coinId;
 
@@ -40,7 +42,7 @@ const Details = ({ match }) => {
             <CardContent>
               <ChartComponent
                 coin={coinId}
-                currency="usd"
+                currency={currency}
                 marketData={marketData}
               />
             </CardContent>
@@ -51,7 +53,7 @@ const Details = ({ match }) => {
             <CardContent>
               <MarketDetails
                 marketData={marketData}
-                currency="usd"
+                currency={currency}
                 isLoading={isLoading}
               />
             </CardContent>

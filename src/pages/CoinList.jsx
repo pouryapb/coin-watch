@@ -21,9 +21,15 @@ import { red, green } from "@material-ui/core/colors";
 import { CoinListContext } from "../context/CoinListContext";
 
 const WatchList = () => {
-  const { isLoading, list, page, perPage, setPage, setPerPage } = useContext(
-    CoinListContext
-  );
+  const {
+    isLoading,
+    list,
+    page,
+    perPage,
+    setPage,
+    setPerPage,
+    activeCryptos,
+  } = useContext(CoinListContext);
 
   const history = useHistory();
 
@@ -58,53 +64,51 @@ const WatchList = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {list
-                  .slice(page * perPage, page * perPage + perPage)
-                  .map((listItem) => {
-                    return (
-                      <TableRow
-                        key={listItem.rank}
-                        hover
-                        style={{
-                          cursor: "pointer",
-                        }}
-                        onClick={(event) => redirect(event, listItem.id)}
-                      >
-                        <TableCell>{listItem.rank}</TableCell>
-                        <TableCell>
-                          <Avatar src={listItem.image} />
-                        </TableCell>
-                        <TableCell>{listItem.name}</TableCell>
-                        <TableCell>{listItem.price}</TableCell>
-                        <TableCell>
-                          <span
-                            style={{
-                              display: "flex",
-                              color:
-                                listItem.priceChange.slice(0, -1) >= 0
-                                  ? green[400]
-                                  : red[400],
-                            }}
-                          >
-                            {listItem.priceChange.slice(0, -1) >= 0 ? (
-                              <ArrowDropUp />
-                            ) : (
-                              <ArrowDropDown />
-                            )}
-                            {listItem.priceChange}
-                          </span>
-                        </TableCell>
-                        <TableCell>{listItem.marketCap}</TableCell>
-                        <TableCell>{listItem.volume}</TableCell>
-                      </TableRow>
-                    );
-                  })}
+                {list.map((listItem) => {
+                  return (
+                    <TableRow
+                      key={listItem.rank}
+                      hover
+                      style={{
+                        cursor: "pointer",
+                      }}
+                      onClick={(event) => redirect(event, listItem.id)}
+                    >
+                      <TableCell>{listItem.rank}</TableCell>
+                      <TableCell>
+                        <Avatar src={listItem.image} />
+                      </TableCell>
+                      <TableCell>{listItem.name}</TableCell>
+                      <TableCell>{listItem.price}</TableCell>
+                      <TableCell>
+                        <span
+                          style={{
+                            display: "flex",
+                            color:
+                              listItem.priceChange.slice(0, -1) >= 0
+                                ? green[400]
+                                : red[400],
+                          }}
+                        >
+                          {listItem.priceChange.slice(0, -1) >= 0 ? (
+                            <ArrowDropUp />
+                          ) : (
+                            <ArrowDropDown />
+                          )}
+                          {listItem.priceChange}
+                        </span>
+                      </TableCell>
+                      <TableCell>{listItem.marketCap}</TableCell>
+                      <TableCell>{listItem.volume}</TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
               <TableFooter>
                 <TableRow>
                   <TablePagination
                     rowsPerPageOptions={[10, 25, 50, 100, 250]}
-                    count={list.length}
+                    count={activeCryptos}
                     rowsPerPage={perPage}
                     page={page}
                     onChangePage={changePageHandler}
