@@ -1,0 +1,27 @@
+{
+  "name": "coin-watch-predictor",
+  "version": "1.0.0",
+  "description": "neural network for predicting price change in cryptocurrencys",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/pouryapb/coin-watch.git"
+  },
+  "keywords": [
+    "newural",
+    "network",
+    "cryptocurrency"
+  ],
+  "author": "pouryapb",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pouryapb/coin-watch/issues"
+  },
+  "homepage": "https://github.com/pouryapb/coin-watch#readme",
+  "dependencies": {
+    "brain.js": "^2.0.0-beta.2"
+  }
+}
