@@ -5,6 +5,7 @@ import coinGecko from "../API/coinGecko";
 import MarketDetails from "../components/MarketDetails";
 import ChartComponent from "../components/ChartComponent";
 import { CoinListContext } from "../context/CoinListContext";
+import Predictor from "../components/Predictor";
 
 const Details = ({ match }) => {
   const [marketData, setMarketData] = useState(null);
@@ -48,8 +49,15 @@ const Details = ({ match }) => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12}>
-          <Card>
+        <Grid item md={2} xs={12}>
+          <Card style={{ height: "100%", justifyItems: "center" }}>
+            <CardContent style={{ height: "100%" }}>
+              <Predictor />
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item md={10} xs={12}>
+          <Card style={{ height: "100%" }}>
             <CardContent>
               <MarketDetails
                 marketData={marketData}
