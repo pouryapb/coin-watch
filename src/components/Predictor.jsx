@@ -102,15 +102,15 @@ const Predictor = ({ id }) => {
             )}
           </Typography>
         </Grid>
-        <Typography color="error" variant="body2">
-          Accuracy:{" "}
-          {percentFormatter.format(
-            mode === "minutly"
-              ? m.rightGuess / m.allGuess
-              : h.rightGuess / h.allGuess
-          )}
-        </Typography>
       </Grid>
+      <Typography color="error" variant="body2">
+        Accuracy:{" "}
+        {percentFormatter.format(
+          mode === "minutly"
+            ? m.rightGuess / m.allGuess
+            : h.rightGuess / h.allGuess
+        )}
+      </Typography>
       <Grid item style={{ alignSelf: "center" }}>
         <ToggleButtonGroup
           value={mode}
