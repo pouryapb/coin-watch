@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.js": "/coin-watch/static/js/main.3d39463d.chunk.js",
-    "main.js.map": "/coin-watch/static/js/main.3d39463d.chunk.js.map",
+    "main.js": "/coin-watch/static/js/main.280a1701.chunk.js",
+    "main.js.map": "/coin-watch/static/js/main.280a1701.chunk.js.map",
     "runtime-main.js": "/coin-watch/static/js/runtime-main.a25a6bb9.js",
     "runtime-main.js.map": "/coin-watch/static/js/runtime-main.a25a6bb9.js.map",
     "static/css/2.5c4b927d.chunk.css": "/coin-watch/static/css/2.5c4b927d.chunk.css",
@@ -16,6 +16,6 @@
     "static/js/runtime-main.a25a6bb9.js",
     "static/css/2.5c4b927d.chunk.css",
     "static/js/2.6c26b013.chunk.js",
-    "static/js/main.3d39463d.chunk.js"
+    "static/js/main.280a1701.chunk.js"
   ]
 }
