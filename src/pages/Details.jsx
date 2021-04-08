@@ -52,7 +52,7 @@ const Details = ({ match }) => {
         <Grid item md={2} xs={12}>
           <Card style={{ height: "100%", justifyItems: "center" }}>
             <CardContent style={{ height: "100%" }}>
-              <Predictor />
+              <Predictor id={coinId} />
             </CardContent>
           </Card>
         </Grid>

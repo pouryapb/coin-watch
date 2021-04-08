@@ -28,7 +28,7 @@ const percentFormatter = new Intl.NumberFormat(undefined, {
   style: "percent",
 });
 
-const Predictor = () => {
+const Predictor = ({ id }) => {
   const [m, setM] = useState({});
   const [h, setH] = useState({});
   const [mode, setMode] = useState("minutly");
@@ -37,15 +37,15 @@ const Predictor = () => {
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
-      const m = await predictor.get("/m").then((result) => result.data);
-      const h = await predictor.get("/h").then((result) => result.data);
+      const m = await predictor.get("/m/" + id).then((result) => result.data);
+      const h = await predictor.get("/h/" + id).then((result) => result.data);
 
       setM(m);
       setH(h);
       setIsLoading(false);
     };
     fetchData();
-  }, []);
+  }, [id]);
 
   return isLoading ? (
     <React.Fragment>
